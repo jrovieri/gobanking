@@ -5,6 +5,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 type Customer struct {
@@ -15,6 +17,15 @@ type Customer struct {
 
 func greet(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello World!")
+}
+
+func createCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, "Post request received")
+}
+
+func getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Fprint(w, vars["customer_id"])
 }
 
 func getAllCustomers(w http.ResponseWriter, r *http.Request) {
