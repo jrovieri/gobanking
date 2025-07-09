@@ -3,10 +3,9 @@ package app
 import (
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/jrovieri/gobanking/service"
 )
 
 type Customer struct {
@@ -15,25 +14,13 @@ type Customer struct {
 	Zipcode string `json:"zipcode" xml:"zipcode"`
 }
 
-func greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World!")
+type CustomerHandler struct {
+	service service.CustomerService
 }
 
-func createCustomer(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Post request received")
-}
+func (ch *CustomerHandler) getAllCustomers(w http.ResponseWriter, r *http.Request) {
 
-func getCustomer(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fmt.Fprint(w, vars["customer_id"])
-}
-
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-
-	customers := []Customer{
-		{Name: "John Doe", City: "New York", Zipcode: "110075"},
-		{Name: "Wolfgang Ritter", City: "Rittersberg", Zipcode: "340978"},
-	}
+	customers, _ := ch.service.GetAllCustomers()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Add("Content-Type", "application/xml")

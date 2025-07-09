@@ -5,16 +5,16 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jrovieri/gobanking/domain"
+	"github.com/jrovieri/gobanking/service"
 )
 
 func Start() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/greet", greet).Methods(http.MethodGet)
-	router.HandleFunc("/customers", getAllCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customer/{customer_id:[0-9]+}", getCustomer).Methods(http.MethodGet)
-	router.HandleFunc("/customer", createCustomer).Methods(http.MethodPost)
+	customerHandler := CustomerHandler{service: service.NewCustomerService(domain.NewCustomerRepositoryDb())}
+	router.HandleFunc("/customers", customerHandler.getAllCustomers).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe("localhost:8000", router))
 
