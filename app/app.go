@@ -15,6 +15,7 @@ func Start() {
 
 	customerHandler := CustomerHandler{service: service.NewCustomerService(domain.NewCustomerRepositoryDb())}
 	router.HandleFunc("/customers", customerHandler.getAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customers/{customer_id:[0-9]+}", customerHandler.getCustomer).Methods(http.MethodGet)
 
 	log.Fatal(http.ListenAndServe("localhost:8000", router))
 
