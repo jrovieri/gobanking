@@ -7,6 +7,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jrovieri/gobanking/errs"
 )
 
 type CustomerRepositoryDb struct {
@@ -29,13 +30,13 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 	return CustomerRepositoryDb{client}
 }
 
-func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
+func (d CustomerRepositoryDb) FindAll() ([]Customer, *errs.AppError) {
 
 	sql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
 	rows, err := d.client.Query(sql)
 	if err != nil {
 		log.Println("Error while querying the customer table:\n" + err.Error())
-		return nil, err
+		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
 
 	customers := make([]Customer, 0)
@@ -45,22 +46,27 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.Birthdate, &c.Status)
 		if err != nil {
 			fmt.Println("Error while scanning customers: " + err.Error())
+			return nil, errs.NewUnexpectedError("Unexpected database error")
 		}
 		customers = append(customers, c)
 	}
 	return customers, nil
 }
 
-func (d CustomerRepositoryDb) ById(id string) (*Customer, error) {
-	sql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
+	sqlStr := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
-	row := d.client.QueryRow(sql, id)
+	row := d.client.QueryRow(sqlStr, id)
 	var c Customer
 
 	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.Birthdate, &c.Status)
 	if err != nil {
-		log.Println("Error while scanning customer " + err.Error())
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, errs.NewNotFoundError("Customer not found")
+		} else {
+			log.Println("Error while scanning customer " + err.Error())
+			return nil, errs.NewUnexpectedError("Unexpected database error")
+		}
 	}
 	return &c, nil
 }

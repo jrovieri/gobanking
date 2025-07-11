@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/jrovieri/gobanking/errs"
+
 type Customer struct {
 	Id        string
 	Name      string
@@ -10,6 +12,6 @@ type Customer struct {
 }
 
 type CustomerRepository interface {
-	FindAll() ([]Customer, error)
-	ById(string) (*Customer, error)
+	FindAll() ([]Customer, *errs.AppError)
+	ById(string) (*Customer, *errs.AppError)
 }
