@@ -6,7 +6,7 @@ import (
 )
 
 type CustomerService interface {
-	GetAllCustomers() ([]domain.Customer, *errs.AppError)
+	GetAllCustomers(string) ([]domain.Customer, *errs.AppError)
 	GetCustomer(string) (*domain.Customer, *errs.AppError)
 }
 
@@ -18,8 +18,17 @@ func NewCustomerService(repository domain.CustomerRepository) DefaultCustomerSer
 	return DefaultCustomerService{repository: repository}
 }
 
-func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, *errs.AppError) {
-	return s.repository.FindAll()
+func (s DefaultCustomerService) GetAllCustomers(status string) ([]domain.Customer, *errs.AppError) {
+
+	switch status {
+	case "active":
+		status = "1"
+	case "inactive":
+		status = "0"
+	default:
+		status = ""
+	}
+	return s.repository.FindAll(status)
 }
 
 func (s DefaultCustomerService) GetCustomer(id string) (*domain.Customer, *errs.AppError) {
