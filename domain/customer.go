@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/jrovieri/gobanking/errs"
+import (
+	"github.com/jrovieri/gobanking/dto"
+	"github.com/jrovieri/gobanking/errs"
+)
 
 type Customer struct {
 	Id        string `db:"customer_id"`
@@ -9,6 +12,26 @@ type Customer struct {
 	Zipcode   string
 	Birthdate string `db:"date_of_birth"`
 	Status    string
+}
+
+func (c Customer) ToDto() dto.CustomerResponse {
+
+	return dto.CustomerResponse{
+		Id:        c.Id,
+		Name:      c.Name,
+		City:      c.City,
+		Zipcode:   c.Zipcode,
+		Birthdate: c.Birthdate,
+		Status:    c.statusAsText(),
+	}
+}
+
+func (c Customer) statusAsText() string {
+	statusAsText := "active"
+	if c.Status == "0" {
+		statusAsText = "inactive"
+	}
+	return statusAsText
 }
 
 type CustomerRepository interface {
