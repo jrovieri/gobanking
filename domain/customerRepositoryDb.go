@@ -6,16 +6,17 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/jrovieri/gobanking/errs"
 	"github.com/jrovieri/gobanking/logger"
 )
 
 type CustomerRepositoryDb struct {
-	client *sql.DB
+	client *sqlx.DB
 }
 
 func NewCustomerRepositoryDb() CustomerRepositoryDb {
-	client, err := sql.Open("mysql", "gobanking:wks32x23@tcp(127.0.0.1:3306)/gobanking")
+	client, err := sqlx.Open("mysql", "gobanking:wks32x23@tcp(127.0.0.1:3306)/gobanking")
 	if err != nil {
 		panic(err)
 	}
@@ -32,16 +33,16 @@ func NewCustomerRepositoryDb() CustomerRepositoryDb {
 
 func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {
 
-	var rows *sql.Rows
 	var err error
+	customers := make([]Customer, 0)
 
 	sqlStr := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
 
 	if status == "" {
-		rows, err = d.client.Query(sqlStr)
+		err = d.client.Select(&customers, sqlStr)
 	} else {
 		sqlStr += " where status = ?"
-		rows, err = d.client.Query(sqlStr, status)
+		err = d.client.Select(&customers, sqlStr, status)
 	}
 
 	if err != nil {
@@ -49,27 +50,15 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
 
-	customers := make([]Customer, 0)
-
-	for rows.Next() {
-		var c Customer
-		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.Birthdate, &c.Status)
-		if err != nil {
-			logger.Error("Error while scanning customers: " + err.Error())
-			return nil, errs.NewUnexpectedError("Unexpected database error")
-		}
-		customers = append(customers, c)
-	}
 	return customers, nil
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
+
+	var customer Customer
 	sqlStr := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
-	row := d.client.QueryRow(sqlStr, id)
-	var c Customer
-
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.Birthdate, &c.Status)
+	err := d.client.Get(&customer, sqlStr, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("Customer not found")
@@ -78,5 +67,5 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 			return nil, errs.NewUnexpectedError("Unexpected database error")
 		}
 	}
-	return &c, nil
+	return &customer, nil
 }

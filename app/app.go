@@ -10,7 +10,6 @@ import (
 )
 
 func Start() {
-
 	router := mux.NewRouter()
 
 	customerHandler := CustomerHandler{service: service.NewCustomerService(domain.NewCustomerRepositoryDb())}
