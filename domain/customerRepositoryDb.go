@@ -2,8 +2,6 @@ package domain
 
 import (
 	"database/sql"
-	"log"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -15,20 +13,8 @@ type CustomerRepositoryDb struct {
 	client *sqlx.DB
 }
 
-func NewCustomerRepositoryDb() CustomerRepositoryDb {
-	client, err := sqlx.Open("mysql", "gobanking:wks32x23@tcp(127.0.0.1:3306)/gobanking")
-	if err != nil {
-		panic(err)
-	}
-
-	if err := client.Ping(); err != nil {
-		log.Fatalln(err)
-	}
-
-	client.SetConnMaxLifetime(time.Minute * 3)
-	client.SetMaxOpenConns(10)
-	client.SetMaxIdleConns(10)
-	return CustomerRepositoryDb{client}
+func NewCustomerRepositoryDb(dbClient *sqlx.DB) CustomerRepositoryDb {
+	return CustomerRepositoryDb{client: dbClient}
 }
 
 func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {
