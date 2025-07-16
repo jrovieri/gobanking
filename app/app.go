@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	"github.com/jrovieri/gobanking/domain"
+	"github.com/jrovieri/gobanking/handlers"
 	"github.com/jrovieri/gobanking/service"
 )
 
@@ -18,11 +19,11 @@ func Start() {
 	accountRepositoryDb := domain.NewAccountRepositoryDb(dbClient)
 	customerRepositoryDb := domain.NewCustomerRepositoryDb(dbClient)
 
-	accountHandler := AccountHandler{service: service.NewAccountService(accountRepositoryDb)}
-	customerHandler := CustomerHandler{service: service.NewCustomerService(customerRepositoryDb)}
+	accountHandler := handlers.AccountHandler{Service: service.NewAccountService(accountRepositoryDb)}
+	customerHandler := handlers.CustomerHandler{Service: service.NewCustomerService(customerRepositoryDb)}
 
-	router.HandleFunc("/customers", customerHandler.getAllCustomers).Methods(http.MethodGet)
-	router.HandleFunc("/customers/{customer_id:[0-9]+}", customerHandler.getCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customers", customerHandler.GetAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customers/{customer_id:[0-9]+}", customerHandler.GetCustomer).Methods(http.MethodGet)
 	router.HandleFunc("/customers/{customer_id:[0-9]+}/account", accountHandler.NewAccount).Methods(http.MethodPost)
 	router.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", accountHandler.MakeTransaction).Methods(http.MethodPost)
 	log.Fatal(http.ListenAndServe("localhost:8000", router))

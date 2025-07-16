@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"encoding/json"
@@ -15,12 +15,12 @@ type Customer struct {
 }
 
 type CustomerHandler struct {
-	service service.CustomerService
+	Service service.CustomerService
 }
 
-func (ch *CustomerHandler) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandler) GetAllCustomers(w http.ResponseWriter, r *http.Request) {
 	status := r.URL.Query().Get("status")
-	customers, err := ch.service.GetAllCustomers(status)
+	customers, err := ch.Service.GetAllCustomers(status)
 
 	if err != nil {
 		writeResponse(w, err.Code, err)
@@ -30,11 +30,11 @@ func (ch *CustomerHandler) getAllCustomers(w http.ResponseWriter, r *http.Reques
 
 }
 
-func (ch *CustomerHandler) getCustomer(w http.ResponseWriter, r *http.Request) {
+func (ch *CustomerHandler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["customer_id"]
 
-	customer, err := ch.service.GetCustomer(id)
+	customer, err := ch.Service.GetCustomer(id)
 
 	if err != nil {
 		writeResponse(w, err.Code, err)

@@ -1,4 +1,4 @@
-package app
+package handlers
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 )
 
 type AccountHandler struct {
-	service service.AccountService
+	Service service.AccountService
 }
 
 func (h AccountHandler) NewAccount(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,7 @@ func (h AccountHandler) NewAccount(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, http.StatusBadRequest, err.Error())
 	} else {
 		request.CustomerId = customerId
-		account, err := h.service.NewAccount(request)
+		account, err := h.Service.NewAccount(request)
 		if err != nil {
 			writeResponse(w, err.Code, err.Message)
 		} else {
@@ -48,7 +48,7 @@ func (h AccountHandler) MakeTransaction(w http.ResponseWriter, r *http.Request) 
 	request.AccountId = accountId
 	request.CustomerId = customerId
 
-	account, err := h.service.MakeTransaction(request)
+	account, err := h.Service.MakeTransaction(request)
 	if err != nil {
 		writeResponse(w, err.Code, err.Message)
 	} else {
