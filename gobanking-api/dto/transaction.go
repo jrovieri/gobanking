@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/jrovieri/gobanking/errs"
+	"github.com/jrovieri/gobanking/api/errs"
 )
 
 const (

@@ -9,10 +9,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
-	"github.com/jrovieri/gobanking/domain"
-	"github.com/jrovieri/gobanking/handlers"
-	"github.com/jrovieri/gobanking/logger"
-	"github.com/jrovieri/gobanking/service"
+	"github.com/jrovieri/gobanking/api/domain"
+	"github.com/jrovieri/gobanking/api/handlers"
+	"github.com/jrovieri/gobanking/api/logger"
+	"github.com/jrovieri/gobanking/api/service"
 )
 
 func sanityCheck() {

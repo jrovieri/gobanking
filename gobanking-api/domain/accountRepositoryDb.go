@@ -5,8 +5,8 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/jrovieri/gobanking/errs"
-	"github.com/jrovieri/gobanking/logger"
+	"github.com/jrovieri/gobanking/api/errs"
+	"github.com/jrovieri/gobanking/api/logger"
 )
 
 type AccountRepositoryDb struct {

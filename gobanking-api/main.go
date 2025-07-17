@@ -1,13 +1,9 @@
 package main
 
-import (
-	"github.com/jrovieri/gobanking/app"
-	"github.com/jrovieri/gobanking/logger"
-)
+import "github.com/jrovieri/gobanking/api/app"
 
 func main() {
 
-	logger.Info("Starting the application...")
 	app.Start()
 
 }

@@ -3,9 +3,9 @@ package service
 import (
 	"time"
 
-	"github.com/jrovieri/gobanking/domain"
-	"github.com/jrovieri/gobanking/dto"
-	"github.com/jrovieri/gobanking/errs"
+	"github.com/jrovieri/gobanking/api/domain"
+	"github.com/jrovieri/gobanking/api/dto"
+	"github.com/jrovieri/gobanking/api/errs"
 )
 
 const DB_TIME_LAYOUT = "2006-01-02T15:04:05"

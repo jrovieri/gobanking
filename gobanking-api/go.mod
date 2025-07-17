@@ -1,4 +1,4 @@
-module github.com/jrovieri/gobanking
+module github.com/jrovieri/gobanking/api
 
 go 1.24.4
 

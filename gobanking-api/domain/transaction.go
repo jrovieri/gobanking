@@ -1,6 +1,6 @@
 package domain
 
-import "github.com/jrovieri/gobanking/dto"
+import "github.com/jrovieri/gobanking/api/dto"
 
 const (
 	WITHDRAWAL = "withdrawal"

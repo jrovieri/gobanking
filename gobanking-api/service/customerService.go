@@ -1,9 +1,9 @@
 package service
 
 import (
-	"github.com/jrovieri/gobanking/domain"
-	"github.com/jrovieri/gobanking/dto"
-	"github.com/jrovieri/gobanking/errs"
+	"github.com/jrovieri/gobanking/api/domain"
+	"github.com/jrovieri/gobanking/api/dto"
+	"github.com/jrovieri/gobanking/api/errs"
 )
 
 type CustomerService interface {

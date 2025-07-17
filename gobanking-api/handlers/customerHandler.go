@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/jrovieri/gobanking/service"
+	"github.com/jrovieri/gobanking/api/service"
 )
 
 type Customer struct {

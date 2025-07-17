@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/jrovieri/gobanking/dto"
-	"github.com/jrovieri/gobanking/service"
+	"github.com/jrovieri/gobanking/api/dto"
+	"github.com/jrovieri/gobanking/api/service"
 )
 
 type AccountHandler struct {
